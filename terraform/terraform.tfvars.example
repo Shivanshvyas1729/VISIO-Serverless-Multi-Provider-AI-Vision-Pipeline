@@ -1,0 +1,4 @@
+# Copy this file to "terraform.tfvars" and enter your Groq API Key
+# Get a free key at: https://console.groq.com/keys
+
+groq_api_key = "gsk_your_groq_api_key_here"
