@@ -126,10 +126,10 @@ Before writing any Terraform code, an engineer never jumps straight into HCL. Th
 
 ### 1. Reverse Engineer the Data Flow
 * Trace requests from end-user action down to storage/AI:
-  * User visits a domain $\rightarrow$ Needs **S3 Static Website Hosting**.
-  * User uploads image / submits data $\rightarrow$ Needs public HTTPS endpoint $\rightarrow$ **API Gateway**.
-  * Request needs processing $\rightarrow$ Needs serverless compute $\rightarrow$ **AWS Lambda**.
-  * Code calls external services $\rightarrow$ Needs **Amazon Rekognition** & **Amazon Bedrock**.
+  * User visits a domain → Needs **S3 Static Website Hosting**.
+  * User uploads image / submits data → Needs public HTTPS endpoint → **API Gateway**.
+  * Request needs processing → Needs serverless compute → **AWS Lambda**.
+  * Code calls external services → Needs **Amazon Rekognition** & **Amazon Bedrock**.
 
 ### 2. Map Security Boundaries (Least Privilege)
 * AWS is **Zero-Trust**: Everything is denied by default.
@@ -139,7 +139,10 @@ Before writing any Terraform code, an engineer never jumps straight into HCL. Th
 
 ### 3. Build the Dependency Graph (Terraform's DAG)
 Terraform compiles resources into a Directed Acyclic Graph. Children must reference parent outputs:
-$$\text{IAM Role} \longrightarrow \text{Lambda Function} \longrightarrow \text{API Gateway Integration} \longrightarrow \text{Deployment \& Stage}$$
+
+```text
+[ IAM Role ] ──> [ Lambda Function ] ──> [ API Gateway Integration ] ──> [ Deployment & Stage ]
+```
 
 ---
 
@@ -205,7 +208,7 @@ You (Architect / Tech Lead)           AI (Junior DevOps Engine)         You (Ope
 
 ### What AI Can Handle 100%:
 * Generating complete HCL resource syntax, variables, outputs, and JSON policies.
-* Wiring complex integrations (API Gateway $\rightarrow$ Lambda $\rightarrow$ IAM).
+* Wiring complex integrations (API Gateway → Lambda → IAM).
 * Generating backend code (`image_analyzer.py`) and frontend interfaces (`index.html`).
 
 ### The 4 Pieces of "Extra Knowledge" You Still Need:
@@ -222,7 +225,7 @@ You (Architect / Tech Lead)           AI (Junior DevOps Engine)         You (Ope
 * **Primary DB (AZ-a):** Active database handling all reads and writes.
 * **Standby DB (AZ-b):** Synchronous replica in another physical data center.
 * **Failover:** If AZ-a fails, AWS automatically updates the DNS record to point to AZ-b (~60s downtime, zero data loss).
-* **Cost Impact:** Multi-AZ runs two instances 24/7 $\rightarrow$ **Doubles your database compute bill.**
+* **Cost Impact:** Multi-AZ runs two instances 24/7 → **Doubles your database compute bill.**
 
 ### Developer Safeguards:
 1. **The Dev vs. Prod Switch:**
@@ -255,8 +258,8 @@ Amazon API Gateway is a fully managed AWS service that acts as a single "front d
 
 | API Type | Communication Model | Best Use Case | Key Features & Pricing |
 | :--- | :--- | :--- | :--- |
-| **HTTP API** | Synchronous (Request/Response) | High-performance, low-latency microservices | Up to 70% cheaper (~$1.00/million requests), built-in OIDC/JWT auth. |
-| **REST API** | Synchronous (Request/Response) | Enterprise APIs with full lifecycle needs | WAF integration, request validation, API keys, usage plans (~$3.50/million requests). |
+| **HTTP API** | Synchronous (Request/Response) | High-performance, low-latency microservices | Up to 70% cheaper (~&#36;1.00/million requests), built-in OIDC/JWT auth. |
+| **REST API** | Synchronous (Request/Response) | Enterprise APIs with full lifecycle needs | WAF integration, request validation, API keys, usage plans (~&#36;3.50/million requests). |
 | **WebSocket API** | Stateful, Full-Duplex (Two-Way) | Real-time chat, dashboards, multiplayer games | Persistent connections, routes messages based on content payload. |
 
 ---
